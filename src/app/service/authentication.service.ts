@@ -37,8 +37,8 @@ export class AuthenticationService {
 
   loadCount = 0;
   // domain = '127.0.0.1:8000';
-  domain = 'test.securitytroops.in'
-  // domain = 'api.securitytroops.com'
+  // domain = 'test.securitytroops.in'
+  domain = 'api.securitytroops.com'
   // domain = '192.168.1.88:8000';
 
   // baseUrl: string = 'http://'+this.domain;
@@ -55,12 +55,6 @@ export class AuthenticationService {
   public loadPage: boolean = false
   public loggedIn = new BehaviorSubject<boolean>(false);
 
-  public get RAZORPAY_KEY_ID () {
-    return this.domain == 'api.securitytroops.com' ? "rzp_live_16bOIgJg2SPnRg" : "rzp_test_By62H8BTkC4EMR" 
-  }
-  public get RAZORPAY_KEY_SECRET () {
-    return this.domain == 'api.securitytroops.com' ? "LeF8P47feFM8m0FlCDTkSLpW" : "4ovk5W2hb1I587hmfMqDUU8m" 
-  }
 
   public appStore = `https://apps.apple.com/in/app/${this.appleId}`
   public playStore = `https://play.google.com/store/apps/details?id=${this.playId}`
