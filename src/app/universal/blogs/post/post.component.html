@@ -1,0 +1,299 @@
+<div class="Postdetails container min-h-50 p-md-4 -3">
+    <div class="  my-4">
+        <div class="row mx-0">
+            <ng-container *ngIf="!postdetail">
+                <div class="col-lg-9 col-md-6 col-sm-12 pe-md-2 px-0 post-div position-relative">
+                    <app-skeleton [items]="2" [layout]="12"></app-skeleton>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 row mx-0 ps-md-2 px-0">
+                    <app-skeleton [items]="2" [layout]="12"></app-skeleton>
+                </div>
+            </ng-container>
+            <div class="col-lg-9 col-md-6 col-sm-12 pe-md-2 px-0 post-div position-relative" *ngIf="postdetail">
+                <div class="text-aqua-blue1 my-0" routerLink="/{{page}}/category/{{postdetail?.categories?.slug}}" role="button">
+                    {{postdetail?.categories?.title || ''}}
+                </div>
+                <div class="d-md-flex justify-content-between gap-3 mb-md-0 mb-2">
+                    <h1 class="title fs-2 ">
+                        {{postdetail.title}}
+                    </h1>
+                    <a target="_blank" *ngIf="page == 'khabar' && postdetail.url" href="{{postdetail.url}}">
+                        <button class="bg-aqua-blue text-nowrap" mat-button mat-raised-button color="primary">News Insights</button>
+                    </a>
+                </div>
+                <div class="sub-title text-muted mb-2">
+                    By {{postdetail.authors?.first_name ? (postdetail.authors?.first_name +' '+ postdetail.authors?.last_name) : postdetail.authors?.username}} | Published On {{ postdetail.timestamp | date }}
+
+                </div>
+                <img loading="lazy" src="{{postdetail?.thumbnail || postdetail?.image}}" alt="{{postdetail.authors.username}}" class="post-img w-100 mb-3 rounded-3">
+                <div class="d-md-flex align-items-center w-100 mb-3">
+                    <div class="d-flex align-items-center w-md-50">
+                        <mat-icon role="button" class="ms-0" (click)="profileData ? PostAction(userAction?.like?false:true,'like'):loginForm()" [ngClass]="{'text-danger':userAction?.like}">
+                            thumb_up
+                        </mat-icon>
+                        &nbsp;
+                        <span class="h6 mb-0 me-2" [ngClass]="{'text-danger':userAction?.like}">{{postdetail?.likes || 0}}</span>
+                        <mat-icon role="button" class="ms-0" (click)="profileData ? PostAction(userAction?.unlike?false:true,'unlike'):loginForm()" [ngClass]="{'text-danger':userAction?.unlike}">
+                            thumb_down
+                        </mat-icon>
+                        &nbsp;
+                        <a class="text-decoration-none text-black d-flex align-items-center" href="/blog/{{postdetail?.slug}}#comments" *ngIf="page == 'blog'">
+                            <span class="h6 mb-0 me-2" [ngClass]="{'text-danger':userAction?.unlike}">{{postdetail?.unlikes || 0}}</span>
+                            <mat-icon aria-hidden="false">
+                                comment
+                            </mat-icon>
+                        </a>
+                        &nbsp;
+                        <span class="h6 mb-0 me-2" *ngIf="page == 'blog'">{{postdetail?.comments?.length || 0 }}</span>
+                        <mat-icon role="button" class="ms-0" (click)="profileData?PostAction(userAction?.favourite?false:true,'favourite'):loginForm()" [class.text-danger]="userAction?.favourite">
+                            star
+                        </mat-icon>
+                    </div>
+                    <div class="d-flex w-md-50 align-items-center justify-content-md-end mt-md-0 mt-2">
+                        <span class="h6 mb-0 me-3 d-flex">Share on : </span>
+                        <a class="me-3" target="_blank" href="https://www.facebook.com/sharer.php?u={{currentUrl}}&t={{postdetail.title}}">
+                            <img loading="lazy" alt="social icon" src="assets/images/contact-us/facebookBlue.png" width="24px">
+                        </a>
+                        <a class="me-3" target="_blank" href="https://www.twitter.com/share?url={{currentUrl}}&text={{postdetail.title}}">
+                            <img loading="lazy" alt="social icon" src="assets/images/contact-us/twitterGrad.png" width="24px">
+                        </a>
+                        <a class="me-3" target="_blank" href="https://in.linkedin.com/sharer.php?u={{currentUrl}}&t={{postdetail?.title}}">
+                            <img loading="lazy" alt="social icon" class="" src="assets/images/contact-us/linkedinBlue.png" width="25px" height="25px">
+                        </a>
+                        <mat-icon role="button" class="text-aqua-blue1" (click)="shareDialog(postdetail?.title)">share</mat-icon>
+                    </div>
+                </div>
+                <div [innerHtml]="postdetail.content"></div>
+                <ng-container *ngFor="let tag of postdetail?.tags;let i=index">
+                    <div class="tag-item badge rounded-pill btn me-3 my-2" routerLink="/{{page}}/tag/{{tag.slug}}" [ngClass]="getTagClass(i)" role="button">
+                        <mat-icon>sell</mat-icon>
+                        {{tag.title}}
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="page == 'blog'">
+                    <hr/>
+                    <div id="comments" class="h3"> {{comments?.length}} Comments </div>
+                    <ul class="nav flex-column w-100">
+                        <li *ngFor="let comment of comments;let i=index" class="p-2 nav-item {{i==0 ? '' : 'border-top'}}">
+                            <!-- *ngIf="comment.status=='Active' || comment.user == profileData?.id" -->
+                            <ng-container>
+                                <div class="w-100 mb-2 d-flex">
+                                    <div>
+                                        <img loading="lazy" src="{{comment?.users?.image}}" onerror="this.src='../assets/images/st.png'" class="comment-user-img" alt="{{comment?.users?.display}}">
+                                    </div>
+                                    <div>
+                                        <div class="mb-0 text-dark h5">{{comment.name}}</div>
+                                        <small class="text-muted">Posted on: {{comment.timestamp | date:'MMM d, y' }}</small>
+                                        <div class="mb-1 text-dark msg-text">{{comment.content}}</div>
+                                    </div>
+                                </div>
+                                <ul class="nav flex-column reply-card rounded-3 mb-2 w-100 ms-3" *ngIf="(comment.id == showReply?.id)">
+                                    <li *ngFor="let reply of comment?.replies;let i=index">
+                                        <div class="p-2 nav-item {{i==0 ? '' : 'border-top'}}">
+                                            <div class="w-100 d-flex">
+                                                <div>
+                                                    <img loading="lazy" src="{{reply?.users?.image}}" onerror="this.src='../assets/images/st.png'" class="comment-user-img" alt="{{reply?.users?.display}}">
+                                                </div>
+                                                <div>
+                                                    <div class="mb-0 text-dark h5">{{reply.name}}</div>
+                                                    <small class="text-muted">Posted on: {{reply.timestamp | date:'MMM d, y' }}</small>
+                                                    <div class="mb-1 text-dark msg-text">{{reply.content}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li *ngIf="comment?.replies?.length==0 || !comment.replies">
+                                        <div class="mb-0 p-3 text-muted h5">No replies...</div>
+                                    </li>
+                                </ul>
+                                <div class="w-100 d-flex">
+                                    <button mat-button type="submit" mat-raised-button class="me-3" (click)="reply(comment)" *ngIf="profileData && (comment.id !== replyTo?.id)">
+                                        Reply
+                                    </button>
+                                    <button *ngIf="comment?.replies?.length>0" mat-button type="submit" mat-raised-button (click)="viewReply(comment)" color="primary">
+                                        {{(comment.id == showReply?.id) ? 'Hide' : 'Show'}} Replies
+                                    </button>
+                                </div>
+                                <form [formGroup]="replyForm" class="mt-2 p-3 reply-card card border-info ronded-3" *ngIf="profileData && (comment.id == replyTo?.id)" (ngSubmit)="postComment(comment)">
+                                    <div class="h4"> Reply to {{comment.name}} </div>
+                                    <div class="row mx-0">
+                                        <div class="col-12 row mx-0 px-0" *ngIf="!profileData">
+                                            <div class="col-6 ps-md-0  px-0">
+                                                <mat-form-field appearance="outline" class="w-100">
+                                                    <mat-label>Name</mat-label>
+                                                    <input matInput formControlName="name" placeholder="Enter Name" />
+                                                    <mat-error *ngIf="replyForm.controls['name'].hasError('required')">
+                                                        Name is <strong>required</strong>
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-6 pe-md-0 ">
+                                                <mat-form-field appearance="outline" class="w-100">
+                                                    <mat-label>Email</mat-label>
+                                                    <input matInput formControlName="email" placeholder="Enter Email" />
+                                                    <mat-error *ngIf="replyForm.controls['email'].hasError('required')">
+                                                        Email is <strong>required</strong>
+                                                    </mat-error>
+                                                    <mat-error *ngIf="!replyForm.controls['email'].hasError('required') && replyForm.controls['email'].hasError('pattern')">
+                                                        Enter a <strong>valid</strong> Email
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-6 ps-md-0 px-0">
+                                                <mat-form-field appearance="outline" class="w-100">
+                                                    <mat-label>Website</mat-label>
+                                                    <input matInput formControlName="website" placeholder="Enter website" />
+                                                    <mat-error *ngIf="replyForm.controls['website'].hasError('pattern')">
+                                                        Website should be like <strong>https://securitytroops.in/</strong>
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-6 pe-md-0 px-0">
+                                                <mat-form-field appearance="outline" class="w-100">
+                                                    <mat-label>Mobile No.</mat-label>
+                                                    <input matInput type="number" (keydown)="auth.stripChar($event)" formControlName="mobile" placeholder="Enter Mobile No." />
+                                                    <mat-error *ngIf="replyForm.controls['mobile'].hasError('required')">
+                                                        Mobile No. is <strong>required</strong>
+                                                    </mat-error>
+                                                    <mat-error *ngIf="(replyForm.controls['mobile'].hasError('min') || replyForm.controls['mobile'].hasError('max'))  && !replyForm.controls['mobile'].hasError('required')">
+                                                        Should be in range of <strong>6xxxx xxxxx - 9xxxx xxxxx</strong>
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 px-md-2 px-0">
+                                            <mat-form-field appearance="outline" class="w-100 content-area">
+                                                <mat-label>Message</mat-label>
+                                                <textarea matInput formControlName="content" rows="4" placeholder="Enter Message"></textarea>
+                                                <mat-error *ngIf="replyForm.controls['content'].hasError('required')">
+                                                    Message is <strong>required</strong>
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12 text-end px-md-2 px-0">
+                                            <hr/>
+                                            <button mat-button type="submit" mat-raised-button [disabled]="!replyForm.valid || replyForm.value.content==''" color="primary">
+                                                Reply
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </ng-container>
+                        </li>
+                    </ul>
+                    <hr />
+                    <form [formGroup]="commentForm" class=" p-3 card ronded-3" *ngIf="profileData" (ngSubmit)="postComment()">
+                        <div class="h4"> Post a comment </div>
+                        <div class="row mx-0">
+                            <div class="col-12 row mx-0 px-0 " *ngIf="!profileData">
+                                <div class="col-6 ps-md-0 px-0">
+                                    <mat-form-field appearance="outline" class="w-100">
+                                        <mat-label>Name</mat-label>
+                                        <input matInput formControlName="name" placeholder="Enter Name" />
+                                        <mat-error *ngIf="commentForm.controls['name'].hasError('required')">
+                                            Name is <strong>required</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-6 pe-md-0 px-0">
+                                    <mat-form-field appearance="outline" class="w-100">
+                                        <mat-label>Email</mat-label>
+                                        <input matInput formControlName="email" placeholder="Enter Email" />
+                                        <mat-error *ngIf="commentForm.controls['email'].hasError('required')">
+                                            Email is <strong>required</strong>
+                                        </mat-error>
+                                        <mat-error *ngIf="!commentForm.controls['email'].hasError('required') && commentForm.controls['email'].hasError('pattern')">
+                                            Enter a <strong>valid</strong> Email
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-6 ps-md-0 px-0">
+                                    <mat-form-field appearance="outline" class="w-100">
+                                        <mat-label>Website</mat-label>
+                                        <input matInput formControlName="website" placeholder="Enter website" />
+                                        <mat-error *ngIf="commentForm.controls['website'].hasError('pattern')">
+                                            Website should be like <strong>https://securitytroops.in/</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-6 pe-md-0 px-0">
+                                    <mat-form-field appearance="outline" class="w-100">
+                                        <mat-label>Mobile No.</mat-label>
+                                        <input matInput type="number" (keydown)="auth.stripChar($event)" formControlName="mobile" placeholder="Enter Mobile No." />
+                                        <mat-error *ngIf="commentForm.controls['mobile'].hasError('required')">
+                                            Mobile No. is <strong>required</strong>
+                                        </mat-error>
+                                        <mat-error *ngIf="(commentForm.controls['mobile'].hasError('min') || commentForm.controls['mobile'].hasError('max'))  && !commentForm.controls['mobile'].hasError('required')">
+                                            Should be in range of <strong>6xxxx xxxxx - 9xxxx xxxxx</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-12 px-md-2 px-0">
+                                <mat-form-field appearance="outline" class="w-100 content-area">
+                                    <mat-label>Message</mat-label>
+                                    <textarea rows="4" matInput formControlName="content" placeholder="Enter Message"></textarea>
+                                    <mat-error *ngIf="commentForm.controls['content'].hasError('required')">
+                                        Message is <strong>required</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-12 text-end px-md-2 px-0">
+                                <hr/>
+                                <button mat-button type="submit" mat-raised-button [disabled]="!commentForm.valid || commentForm.value.content==''" color="primary">
+                                    Comment
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </ng-container>
+                <span class="section-split d-none d-md-block"></span>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 row mx-0 ps-md-2 px-0" *ngIf="postdetail">
+                <ng-container *ngIf="!postdetail">
+                    <app-skeleton [items]="1" [layout]="12"></app-skeleton>
+                </ng-container>
+                <div class="col-12 px-0">
+                    <div class="w-100 py-3 detailPage border-bottom" *ngIf="categories.length">
+                        <mat-card class="card nav flex-column w-100">
+                            <div class="card-header">
+                                <div class="title" routerLink="/{{page}}/category" role="button">Categories</div>
+                            </div>
+                            <a *ngFor="let cat of categories" class="text-muted text-decoration-none h6 nav-item px-2 pt-2" routerLink="/{{page}}/category/{{cat.slug}}" role="button">
+                                {{cat.title}} <span class="ms-1 rounded-pill text-white bg-aqua-blue px-2" *ngIf="cat?.posts">{{cat.posts}}</span>
+                            </a>
+                        </mat-card>
+                    </div>
+                    <div class="w-100 py-3 detailPage border-bottom" *ngIf="tags.length">
+                        <mat-card class="card nav flex-column w-100">
+                            <div class="card-header">
+                                <div class="title" routerLink="/{{page}}/tag" role="button">Tags</div>
+                            </div>
+                            <a *ngFor="let tag of tags" class="text-muted text-decoration-none h6 nav-item px-2 pt-2" routerLink="/{{page}}/tag/{{tag.slug}}" role="button">
+                                {{tag.title}} <span class="ms-1 rounded-pill text-white bg-aqua-blue px-2" *ngIf="tag?.posts">{{tag.posts}}</span>
+                            </a>
+                        </mat-card>
+                    </div>
+                    <div class="w-100 py-3 detailPage border-bottom" *ngIf="recentPosts.length">
+                        <mat-card class="card nav flex-column w-100">
+                            <div class="card-header">
+                                <div class="title" routerLink="/{{page}}" role="button">Recent {{page == 'blog' ? 'Posts' : 'News'}}</div>
+                            </div>
+                            <a *ngFor="let post of recentPosts" class="text-decoration-none p-2 recent-post nav-item" routerLink="/{{page}}/{{post.slug}}" role="button">
+                                <div class="w-100 d-flex">
+                                    <div>
+                                        <img loading="lazy" src="{{post?.thumbnail || post?.image}}" class="recent-post-img" alt="{{post?.title}}">
+                                    </div>
+                                    <div>
+                                        <div class="mb-1 text-muted h6">{{post.title}}</div>
+                                        <p class="mb-0"><small class="text-dark">Posted on: {{post.timestamp | date:'MMM d, y' }}</small></p>
+                                    </div>
+                                </div>
+                            </a>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

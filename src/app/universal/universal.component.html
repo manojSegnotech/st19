@@ -1,0 +1,200 @@
+<mat-sidenav-container class="sidenav-container" #topElement>
+    <mat-sidenav #drawer class="Usidenav" fixedInViewport [attr.role]="(isHandset$) ? 'dialog' : 'navigation'" [mode]="(isHandset$) ? 'over' : 'side'">
+        <mat-toolbar class="tssidebar d-flex text-start"><img loading="lazy" alt="social icon" src="assets/images/dashboard/banner.png" alt="Security Stroops" width="130px"></mat-toolbar>
+        <mat-nav-list>
+            <div *ngIf='auth.userValue.id' class="px-3 fs-3 py-2" [innerHtml]="(auth.userValue.display.length>20) ? (auth.userValue.display | titlecase)+'...' : (auth.userValue.display  | titlecase) ">
+            </div>
+            <a class="d-flex align-items-center" (click)="mobileView === true ? drawer.close() : drawer.open()" mat-list-item routerLink="/" routerLinkActive="active">
+                <mat-icon>home</mat-icon><span>HOME</span>
+            </a>
+            <ng-container *ngIf='auth.userValue.id'>
+                <a mat-list-item routerLink="/app">
+                    <mat-icon>dashboard</mat-icon><span>Dashboard</span>
+                </a>
+                <a mat-list-item routerLink="/profile" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active">
+                    <mat-icon>person</mat-icon><span>Profile</span>
+                </a>
+            </ng-container>
+            <a mat-list-item routerLink="/company" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active">
+                <mat-icon>business</mat-icon><span>COMPANY</span>
+            </a>
+            <a mat-list-item routerLink="/services" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active">
+                <mat-icon>settings</mat-icon><span>SERVICES</span>
+            </a>
+            <a mat-list-item routerLink="/jobs" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active">
+                <mat-icon>work</mat-icon><span>JOBS</span>
+            </a>
+            <a mat-list-item routerLink="/professional" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active">
+                <mat-icon>person_apron</mat-icon><span>PROFESSIONALS</span>
+            </a>
+
+            <a mat-list-item routerLink="/pricing" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active">
+                <mat-icon>currency_rupee</mat-icon>
+                PRICING
+            </a>
+            <!-- <a mat-list-item routerLink="/about-us" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active">
+                <mat-icon>info</mat-icon><span>ABOUT</span>
+            </a> -->
+            <a mat-list-item routerLink="/blog" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active">
+                <mat-icon>post_add</mat-icon><span>BLOG</span>
+            </a>
+            <a mat-list-item routerLink="/khabar" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active">
+                <mat-icon>post_add</mat-icon><span>NEWS</span>
+            </a>
+            <a mat-list-item routerLink="/contact-us" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active">
+                <mat-icon>call</mat-icon><span>CONTACT US</span>
+            </a>
+
+            <a mat-list-item routerLink="/login" (click)="mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active" *ngIf='!auth.userValue.id'>
+                <mat-icon>login</mat-icon>
+                <span>LOGIN </span>
+            </a>
+            <a mat-list-item (click)="logout(); mobileView === true ? drawer.close() : drawer.open()" routerLinkActive="active" *ngIf='auth.userValue.id'>
+                <mat-icon>logout</mat-icon>
+                <span>Logout </span>
+            </a>
+
+            <!-- <div class="px-3">
+                <button mat-button class="   text-light" [matMenuTriggerFor]="menu" aria-label="Toggle menu" *ngIf='auth.userValue.id' [innerHtml]="(auth.userValue.display.length>20) ? (auth.userValue.display | titlecase)+'...' : (auth.userValue.display  | titlecase) ">
+                   <mat-icon>more_vert</mat-icon>
+                </button>
+            </div> -->
+            <!-- <mat-menu #menu="matMenu" xPosition="after">
+                <button mat-menu-item routerLink="/app">Dashboard1</button>
+                <button mat-menu-item routerLink="/profile" (click)="mobileView === true ? drawer.close() : drawer.open()">Profile</button>
+                <button mat-menu-item  (click)="logout();mobileView === true ? drawer.close() : drawer.open()">Logout</button>
+            </mat-menu> -->
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar class="UnitsMatToolbar">
+            <mat-grid-list class="mx-2" cols="12" rowHeight="50px">
+                <mat-grid-tile class="main-top-bar d-flex justify-content-between " [class.w-100]='isHandset$'>
+                    <a routerLink="/">
+                        <img loading="lazy" alt="Security Stroops" src="assets/images/login/st.png" class="logo">
+                    </a>
+                    <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$">
+                        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+                    </button>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="11" class="d-md-block d-none" *ngIf="(isHandset$) == false">
+                    <div class="w-100 d-flex align-items-center justify-content-end ">
+                        <!-- <app-global-search></app-global-search> -->
+                        <a class="nav-item text-light" [routerLinkActiveOptions]="{exact:true}" routerLinkActive="active" routerLink="/" mat-icon-button>
+                            <mat-icon>home</mat-icon>
+                        </a>
+                        <a class="nav-item text-light" routerLinkActive="active" routerLink="/company" mat-button>COMPANY</a>
+                        <a class="nav-item text-light" [routerLinkActiveOptions]="{exact:true}" routerLinkActive="active" routerLink="/services" mat-button>SERVICES</a>
+                        <a class="nav-item text-light" routerLinkActive="active" routerLink="/jobs" mat-button>JOBS</a>
+                        <a class="nav-item text-light" routerLinkActive="active" routerLink="/professional" mat-button>PROFESSIONALS</a>
+                        <a class="nav-item text-light" routerLinkActive="active" routerLink="/pricing" mat-button>PRICING</a>
+                        <!-- <a class="nav-item text-light" routerLinkActive="active" routerLink="/about-us" mat-button>ABOUT</a> -->
+                        <a class="nav-item text-light" routerLinkActive="active" routerLink="/blog" mat-button>BLOG</a>
+                        <a class="nav-item text-light" routerLinkActive="active" routerLink="/khabar" mat-button>NEWS</a>
+                        <a class="nav-item text-light" routerLinkActive="active" routerLink="/contact-us" mat-button>CONTACT US</a>
+                        <a class="nav-item text-light" routerLinkActive="active" routerLink="/login" mat-button *ngIf='!auth.userValue.id'>
+							LOGIN 
+							<mat-icon iconPositionEnd>lock</mat-icon>
+						</a>
+                        <button mat-button class="more-button account text-light" [matMenuTriggerFor]="menu" aria-label="Toggle menu" *ngIf='auth.userValue.id'>
+							<div class="d-flex align-items-center">{{auth.userValue.display | titlecase}}<mat-icon >more_vert</mat-icon></div> 
+						</button>
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item routerLink="/app">Dashboard</button>
+                            <button mat-menu-item routerLink="/profile">Profile</button>
+                            <button mat-menu-item (click)="logout()">Logout</button>
+                        </mat-menu>
+                    </div>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </mat-toolbar>
+        <div class="nav-bottom"></div>
+        <!-- Add Content Here -->
+        <div class="container-fluid">
+            <router-outlet></router-outlet>
+        </div>
+        <footer class="container-fluid position-relative  bottom-0">
+            <section class="home-Footer">
+                <!-- <div class="row justify-content-center">
+					<mat-card class="col-md-8 col-sm-10">
+						<h2 class="h1">Lorem Ipsum is simply dummy text of the printing and typesetting industry</h2>
+						<div class="text-center">
+							<button mat-raised-button> Schedule Demo</button>
+						</div>
+					</mat-card>
+				</div> -->
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 logo-img">
+                        <a routerLink="/">
+                            <img loading="lazy" alt="social icon" src="assets/images/dashboard/Security-troops-logo-white-text.png" width="120px">
+                        </a>
+                    </div>
+                    <div class="" class="col-md-6 col-sm-12 d-flex justify-content-end align-items-center social-img">
+                        <a class="px-2" target="_blank" href="{{auth.facebook}}">
+                            <img loading="lazy" alt="social icon" src="assets/images/contact-us/facebook-white.png" height="35px">
+                        </a>
+                        <a class="px-2" target="_blank" href="{{auth.instagram}}">
+                            <img loading="lazy" alt="social icon" src="assets/images/contact-us/instagram.png" height="35px">
+                        </a>
+                        <a class="px-2" target="_blank" href="{{auth.twitter}}">
+                            <img loading="lazy" alt="social icon" src="assets/images/contact-us/social-media.png" height="36px">
+                        </a>
+                        <a class="px-2" target="_blank" href="{{auth.linkedin}}">
+                            <img loading="lazy" alt="social icon" src="assets/images/contact-us/linkedin.png" height="35px">
+                        </a>
+                        <a class="px-2" target="_blank" href="{{auth.youtube}}">
+                            <img loading="lazy" alt="youtube icon" src="assets/images/contact-us/youtube1.png" height="35px">
+                        </a>
+                    </div>
+                </div>
+                <div class="row mx-0">
+                    <div class="col-md-3 col-sm-12">
+                        <h2 class="h1">About Us</h2>
+                        <p>We're here to keep you safe and bring you peace of mind. With advanced solutions and a dedication to excellence, we prioritize your protection. Explore personalized security services designed just for you.</p>
+                        <div class="d-flex mb-3 align-items-center">
+                            <mat-icon> mail_outline</mat-icon>
+                            <p class="mb-0 ms-2"><a href="mailto:info@securitytroops.com">info&#64;securitytroops.com</a></p>
+                        </div>
+                        <div class="d-flex mb-3 align-items-center">
+                            <mat-icon>call</mat-icon>
+                            <p class="mb-0 ms-2"><a href="tel:+91-8003806777"> +91 - 8003806777</a></p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <h2 class="h1">Information</h2>
+                        <p><a routerLink="/about-us">About Us</a></p>
+                        <p><a routerLink="/contact-us">Contact Us</a></p>
+                        <p><a routerLink="/privacy-policy">Privacy Policy</a></p>
+                        <p><a routerLink="/refund-policy">Refund Policy</a></p>
+                        <p><a routerLink="/terms-and-conditions">Terms & Conditions</a></p>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <h2 class="h1">Employers</h2>
+                        <p><a [routerLink]="['/signup']" [queryParams]="{ account: 'Agency' }">Create Account</a></p>
+                        <p><a routerLink="/services">Products/Service</a></p>
+                        <p *ngIf="['Owner', 'Admin', 'Manager'].includes(selectedCompany.me?.role)"><a routerLink="/app/job/add">Post a Job</a></p>
+                        <p *ngIf="!isLogin"><a routerLink="/login">Post a Job</a></p>
+                        <p><a routerLink="/faq">FAQ</a></p>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <h2 class="h1">Job Seekers</h2>
+                        <p><a [routerLink]="['/signup']" [queryParams]="{ account: 'Professional' }">Create Account</a></p>
+                        <p><a routerLink="/careers">Careers</a></p>
+                        <p><a routerLink="/how-it-works">How it Works</a></p>
+                    </div>
+                </div>
+                <div class="mt-md-0 mt-2 mb-2 text-end">
+                    <button (click)="bugForm()" type="button" mat-raised-button color="warn">Report a bug</button>
+                </div>
+                <div class="scroll-to-top" [@scrollAnimation]="windowScrolled ? 'show' : 'hide'">
+                    <mat-icon (click)="scrollToTop()">expand_less</mat-icon>
+                </div>
+            </section>
+            <div class="bg-primary p-3">
+                <h3 class="mb-0 text-white">
+                    Copyright Security Troops {{currentYear}}, All Right Reserved
+                </h3>
+            </div>
+        </footer>
+    </mat-sidenav-content>
+</mat-sidenav-container>

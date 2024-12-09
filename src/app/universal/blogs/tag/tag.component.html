@@ -1,0 +1,13 @@
+<div class="container my-5">
+    <div class="card rounded-4 p-3">
+        <h2 class="h3 text-uppercase mb-0">{{page|titlecase}} tags</h2>
+        <div class="d-flex flex-wrap">
+            <ng-container *ngFor="let tag of tags;let i=index">
+                <div class="tag-item badge rounded-pill btn me-3 my-2" routerLink="/{{page}}/tag/{{tag.slug}}" [ngClass]="getTagClass(i)" role="button">
+                    <mat-icon>sell</mat-icon>
+                    {{tag.title}}
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

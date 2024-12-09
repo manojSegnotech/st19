@@ -1,0 +1,13 @@
+<div class="container my-5">
+    <div class="card rounded-4 p-3">
+        <h2 class="h3 text-uppercase mb-0">{{page|titlecase}} category</h2>
+        <div class="d-flex flex-wrap">
+            <ng-container *ngFor="let cat of categories;let i=index">
+                <div class="cat-item badge rounded-1 btn me-3 my-2" routerLink="/{{page}}/category/{{cat.slug}}" [ngClass]="getTagClass(i)" role="button">
+                    <mat-icon>category</mat-icon>
+                    {{cat.title}}
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,475 @@
+<div class="home-Page">
+    <main class="p-0">
+        <section class="home-header p-md-5 p-3">
+            <div class="row mx-0 justify-content-between">
+                <div class="col-md-6 d-flex align-items-center">
+                    <div>
+                        <h3 class="fs-5 blue pb-1">
+                            #1 Advanced Security Service in India.
+                        </h3>
+                        <h1 class="fs-3 lh-sm">
+                            "Your Safety, Our Priority". We offer advanced security solutions for your peace of mind.
+                        </h1>
+                        <p class="contant-p fs-6 lh-sm">
+                            "Discover peace of mind with our security solutions. Explore our top services today for ultimate protection. We prioritize your safety with advanced technology. Experience our leading security solutions for you. Trust us to safeguard what matters most."
+                        </p>
+                        <form class="d-md-flex d-block align-items-center">
+                            <div class="pe-md-0 pe-2 me-2">
+                                <input [(ngModel)]="userNumber" [ngModelOptions]="{standalone: true}" class="px-2" type="number" (keydown)="auth.stripChar($event)" placeholder="Enter Mobile no" required />
+                            </div>
+                            <div class="px-0 pt-md-0 pt-2">
+                                <button [disabled]="!userNumber" type="submit" (click)="userForm()" class="searchbtn blueBG" mat-raised-button>
+                                    Register
+                                </button>
+                            </div>
+                        </form>
+                        <div class="pt-4">
+                            <h2> Download Our App</h2>
+                            <div class="d-flex">
+                                <a target="_blank" class="me-2" href="{{auth.playStore}}">
+                                    <img height="50px" class="GooglePlayStore" loading="lazy" alt="Play Store" src="assets/images/home-page/GooglePlayStore.png" />
+                                </a>
+                                <a target="_blank" class="me-2" href="{{auth.appStore}}">
+                                    <img height="50px" class="appstore" loading="lazy" alt="Apple Store" src="assets/images/home-page/appstore.png" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex justify-content-center pt-md-0 pt-3">
+                    <img src="assets/images/home-page/animeted.png" width="100%" alt="security-home" />
+                </div>
+            </div>
+        </section>
+        <section *ngIf="services.length > 0" class="professionals">
+            <h2 class="navy-blue text-center fs-1 pb-md-5 pb-3">Our Professionals</h2>
+            <div class="row mx-0 px-md-2 px-1 ">
+                <div *ngFor="let service of services; let i = index" class="professional-cards col-md-4 col-sm-6 p-md-2 p-sm-2  mb-md-0 mb-3 px-0">
+                    <div class="h-100">
+                        <mat-card class="card h-100 p-0 rounded" role="button" routerLink="/services/{{ service.slug }}">
+                            <mat-card-content class=" d-flex justify-content-between flex-column h-100 p-0">
+                                <div class="profile-header mb-3  rounded">
+                                    <div>
+                                        <img src="{{service.cover}}" alt="Service cover " class="w-100 rounded-top">
+                                    </div>
+                                    <div class="profile-info">
+                                        <div class="logo-circle">
+                                            <img class="logo" loading="lazy" alt="service thumbnail" [src]="service.thumbnail" onError="this.src='assets/images/st.png'">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center fs-3 text-dark mb-2 s-title">
+                                    <span class="text-break lh-sm"> {{service.title | uppercase}} </span>
+                                </div>
+                                <h5 class="px-3 pb-3 s-content lh-base mb-0" [innerHtml]=" service.content.length > 250? (service.content | slice : 0 : 250) + '....': service.content"></h5>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section *ngIf="services.length > 0 && jobs.length > 0" class="recentJobs d-xl-block d-none px-md-4 mx-1">
+            <h2 class="navy-blue text-center fs-1">Recent Jobs</h2>
+            <div class="contain">
+                <mat-tab-group class="row mx-0" animationDuration="0ms" (selectedTabChange)="tabChange($event.tab)">
+                    <mat-tab class="col-12" label="All Jobs">
+                        <div class="job-cards" *ngFor="let job of dataSet; let i = index">
+                            <mat-card>
+                                <div class="row mx-0">
+                                    <div class="col-md-7">
+                                        <div class="d-flex align-items-center pb-3">
+                                            <div class="p-1 border rounded bg-light">
+                                                <img loading="lazy" alt="logo" src="assets/images/st.png" width="30px" height="30px" />
+                                            </div>
+                                            <h2 class="mb-0 ps-2" role="button" matTooltip="Job Detail" routerLink="/jobs/{{ job.slug }}">{{ job.title }}</h2>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="d-flex align-items-center" matTooltip="Company Detail" role="button" routerLink="/company/{{ job.companies.slug }}">
+                                                <mat-icon class="pe-2">apartment</mat-icon>{{job.companies.name}}
+                                            </span>
+                                            <span class="d-flex align-items-center">
+                                                <mat-icon class="pe-2">location_on</mat-icon>{{ job.cities.name }}
+                                            </span>
+                                            <span class="d-flex align-items-center">
+                                                <mat-icon class="pe-2">schedule</mat-icon>{{ job.jobtype }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 text-end pt-md-0 pt-3 d-flex justify-content-between flex-column">
+                                        <div class="pb-3">
+                                            <button mat-raised-button (click)="applicationFormDialog(job)" role="button" *ngIf="!job.applied">Apply</button>
+                                            <button mat-raised-button disabled *ngIf="job.applied">Applied</button>
+                                        </div>
+                                        <div>
+                                            <div>
+                                                Deadline:<span class="ps-1">{{
+                                                    job.utimestamp | date
+                                                    }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>
+                        <div *ngIf="dataSet.length==0" class="h-100 d-flex align-items-center w-100">
+                            <mat-card class="p-5 w-100 h-100">
+                                <div class="fs-4 h-100  d-flex align-items-center">There are currently no jobs available </div>
+                            </mat-card>
+                        </div>
+                    </mat-tab>
+                    <mat-tab class="col-12" *ngFor="let service of services" label="{{ service.title }}">
+                        <div class="job-cards" *ngFor="let job of dataSet; let i = index">
+                            <mat-card>
+                                <div class="row mx-0">
+                                    <div class="col-md-7">
+                                        <div class="d-flex align-items-center pb-3">
+                                            <div class="p-1 border rounded bg-light">
+                                                <img loading="lazy" alt="logo" src="assets/images/st.png" width="30px" height="30px" />
+                                            </div>
+                                            <h2 class="mb-0 ps-2" role="button" matTooltip="Job Detail" routerLink="/jobs/{{ job.slug }}">{{ job.title }}</h2>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="d-flex align-items-center" matTooltip="Company Detail" role="button" routerLink="/company/{{ job.companies.slug }}">
+                                                <mat-icon class="pe-2">apartment</mat-icon>{{job.companies.name}}
+                                            </span>
+                                            <span class="d-flex align-items-center">
+                                                <mat-icon class="pe-2">location_on</mat-icon>{{ job.cities.name }}
+                                            </span>
+                                            <span class="d-flex align-items-center">
+                                                <mat-icon class="pe-2">schedule</mat-icon>{{ job.jobtype }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 text-end pt-md-0 pt-3 d-flex justify-content-between flex-column">
+                                        <div class="pb-3">
+                                            <button mat-raised-button (click)="applicationFormDialog(job)" role="button" *ngIf="!job.applied">Apply</button>
+                                            <button mat-raised-button disabled *ngIf="job.applied">Applied</button>
+                                        </div>
+                                        <div>
+                                            <div>
+                                                Deadline:<span class="ps-1">{{
+                                                    job.utimestamp | date
+                                                    }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>
+                        <div *ngIf="dataSet.length==0" class="h-100 d-flex align-items-center w-100">
+                            <mat-card class="p-5 w-100 h-100">
+                                <div class="fs-4 h-100  d-flex align-items-center">There are currently no jobs available for {{service.title}} </div>
+                            </mat-card>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+            <div class="BrowseJobs">
+                <h3 class="text-center">
+                    <span routerLink="jobs"> Browse all jobs</span>
+                </h3>
+            </div>
+        </section>
+
+        <section class="choose-us px-md-4 mx-1">
+            <div class="row mx-0">
+                <div class="choose-us-contain col-md-6 col-sm-12 px-md-0">
+                    <h3 class="fs-4 blue">WHY CHOOSE US?</h3>
+                    <h2 class="navy-blue fs-1 lh-sm">
+                        Custom IT solution for your Business
+                    </h2>
+                    <p class="contant-p">
+                        Introducing Security Troops, revolutionizing the private security sector with advanced technology. We're here to meet all your security needs, whether personal or for your business. In a sector stuck in outdated methods, we're changing the game. Criminals
+                        and terrorists are advancing, We have to stay one step ahead from them. With our online platform, finding the perfect security solution is now effortless. Trust us to deliver top-notch advanced services to you. Consult with us
+                        today and let's keep you safe in the modern world.
+                    </p>
+                </div>
+                <div class="col-md-6 row mx-0 pe-md-0">
+                    <div class="choose-us-card1 col-md-6 col-sm-12 ps-md-0 px-xs-0">
+                        <mat-card class="color-card p-2 mb-md-5 mb-3 me-md-2">
+                            <!-- <span><img loading="lazy" src="assets/images/home-page/backup.png " width="30px"></span> -->
+                            <h2>Advertise A Job</h2>
+                            <mat-card-content>
+                                <h5>
+                                    Agencies, advertising a job in the local newspaper’s classified and not finding the right candidates? Find the best professionals by advertising on our platform covering a much more diverse area. That too free of cost.
+                                </h5>
+                            </mat-card-content>
+                        </mat-card>
+                        <mat-card class="p-2 mb-md-5 mb-3 me-md-2">
+                            <!-- <span><img loading="lazy" src="assets/images/home-page/backup.png " width="30px"></span> -->
+                            <h2>Recruiter Profiles</h2>
+                            <mat-card-content>
+                                <h5>
+                                    Are you a professional looking for a job in the private security sector? Tired of trying through the local newspaper’s classified section and getting rejected? Make a profile on our platform and have jobs come looking for you.
+                                </h5>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="choose-us-card2 col-md-6 col-sm-12 mx-0 pe-md-0 px-xs-0">
+                        <mat-card class="p-2 mb-md-5 mb-3 ms-md-2">
+                            <!-- <span><img loading="lazy" src="assets/images/home-page/backup.png " width="30px"></span> -->
+                            <h2>Success In Business</h2>
+                            <mat-card-content>
+                                <h5>
+                                    "We offer a strategic approach to elevate your business . With our solution, unlock new pathways to growth and achievement. We're committed to propelling your business forward with our innovative approach.
+                                </h5>
+                            </mat-card-content>
+                        </mat-card>
+                        <mat-card class="color-card p-2 mb-md-5 mb-3 ms-md-2">
+                            <!-- <span><img loading="lazy" src="assets/images/home-page/backup.png " width="30px"></span> -->
+                            <h2>Find Your Dream Job</h2>
+                            <mat-card-content>
+                                <h5>
+                                    You are a professional with the right skills and the right experience or just a fresher in the private security field, and can’t find a job that satisfies your personal needs? Join us at security troops to find your dream job.
+                                </h5>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="our-work" id="work_approch">
+            <!-- <h3> How We Work</h3> -->
+            <h2 class="navy-blue fs-1">How We Approch Our Method</h2>
+            <p class="contant-p col-md-7 mx-auto col-sm-12 text-center">
+                Empower access, safeguard privacy, and maintain vigilance with robust security measures ensuring user trust and protection
+            </p>
+            <div>
+                <div class="work-contain row mx-0">
+                    <div class="col-md-4">
+                        <h2 class="fs-80">01</h2>
+                        <h2>Access Control and Authentication</h2>
+                        <h4 class="mx-auto col-md-7">
+                            Access control and authentication systems regulate user access by managing permissions and verifying identities to ensure only authorized individuals access data or functionalities.
+                        </h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h2 class="fs-80">02</h2>
+                        <h2>Privacy Protection and Data Security</h2>
+                        <h4 class="mx-auto col-md-7">
+                            User's sensitive information is safeguarded through encryption and privacy controls, ensuring a secure and trusted experience while complying with regulations.
+                        </h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h2 class="fs-80">03</h2>
+                        <h2>Continuous Monitoring and Incident Response</h2>
+                        <h4 class="mx-auto col-md-7">
+                            Real-time monitoring spots suspicious actions fast, enhancing security. An incident response plan guides quick and effective threat handling for minimal disruption.
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="blueBG p-4" (click)="auth.userValue.id ? demoRequest() : loginForm()" mat-raised-button>
+                    Schedule Demo
+                </button>
+            </div>
+        </section>
+
+        <section *ngIf="companies.length > 0" class="agencies">
+            <h2 class="navy-blue text-center fs-1">Top Agencies</h2>
+            <div class="row mx-0 justify-centent-center">
+                <div class="col-lg-3 col-md-5 col-md-8" *ngFor="let company of companies">
+                    <mat-card>
+                        <span>
+                            <img loading="lazy" alt="logo" mat-card-image src="{{ company.logo }}"
+                                onError="this.src='assets/images/st.png'" />
+                        </span>
+                        <h2 routerLink="/company/{{company.slug}}" role="button">{{ company.name }}</h2>
+                        <h4>{{ company.cities.name }}</h4>
+                    </mat-card>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section class="tool-team">
+        <div class="tool-contain row mx-0 pt-md-5 ps-md-4 pt-3 ps-2">
+            <div class="col-md-6 px-0">
+                <div class="w-md-60">
+                    <h2 class="fs-1 lh-sm text-white">
+                        Control everything in a single place
+                    </h2>
+                    <div class=" pt-3">
+                        <h2 class="text-white">
+                            Managing a security agency involves juggling numerous tasks and responsibilities, from team coordination to client management. With our all-in-one platform, you can seamlessly control every aspect of your operations from a single, centralized location.
+                        </h2>
+                    </div>
+                </div>
+                <!-- <button  *ngIf="['Owner','Admin','Manager'].includes(selectedCompany.me.role)"  routerLink="/app/jobs/add" mat-raised-button>
+                    Post a Job
+                </button> -->
+            </div>
+            <div class="col-md-6 macIphone px-0">
+                <img loading="lazy" alt="image" src="assets/images/home-page/mockup.png" width="100%" />
+            </div>
+        </div>
+    </section>
+
+    <div class="tool-card px-md-4 px-2 mx-1">
+        <mat-card class="pt-md-5 px-md-3 pb-md-3 p-2">
+            <div class="row mx-0">
+                <h2 class="navy-blue col-md-4 fs-1 lh-sm">
+                    One tool for your whole team
+                </h2>
+                <p class="contant-p col-md-8">
+                    Revolutionizing security solutions, we serve to personal and business needs. Amid evolving threats, we stay ahead, offering seamless online platforms for effortless, excellent protection. Trust us to safeguard your assets with unparalleled expertise and
+                    dedication.
+                </p>
+            </div>
+
+            <div class="tool-card-contain">
+                <div>
+                    <h2 class="navy-blue fs-1 lh-sm">Start Free & Pay As You Grow</h2>
+                    <div>
+                        Bill Monthly
+                        <mat-slide-toggle></mat-slide-toggle> Bill Yearly
+                    </div>
+                </div>
+                <div>
+                    <mat-slider min="1" max="100000" step="1000" value="40000">
+                        <input matSliderThumb value="40000" />
+                    </mat-slider>
+                </div>
+
+                <div>
+                    <h2 class="fs-1 lh-sm">Free Plan</h2>
+                    <p class="contant-p text-center">
+                        Explore premium services with our Free Plan
+                    </p>
+                </div>
+                <a routerLink="/pricing">
+                    <button mat-raised-button class="p-4 bg-gradient">
+                        Explore plans
+                    </button>
+                </a>
+            </div>
+        </mat-card>
+    </div>
+
+    <!-- <section class="people-comments" *ngIf="chunkedRate.length > 0">
+        <div class="">
+            <h2 class="navy-blue mb-5 text-center fs-1">What people are saying</h2>
+            <div class="p-3 justify-content-center position-relative mt-5">
+                <ngb-carousel style="min-height: 300px" *ngIf="jobs.length > 0" [showNavigationArrows]="false">
+                    <ng-template ngbSlide *ngFor="let rateChunk of chunkedRate">
+                        <div class="carousel-cell row mx-0 px-md-5 px-2">
+                            <div class="col-md-4 my-1" *ngFor="let rate of rateChunk">
+                                <mat-card class="m-1 p-3 h-100">
+                                    <div class="mb-3 d-flex text-start">
+                                        <div class="rounded-circle p-1 border">
+                                            <img loading="lazy" alt="user" class="rounded-circle img-cover" width="50px" height="50px" src="{{ rate.workteams.teams.users.cover }}" onError="this.src='assets/images/st.png'" />
+                                        </div>
+                                    </div>
+                                    <div class="rating mb-4">
+                                        <ngb-rating [rate]="rate.rating" [max]="5" [readonly]="true" class="w-100">
+                                            <ng-template let-fill="fill" let-index="index">
+                                                <i class="bi-star{{ fill === 100 ? '-fill' : '' }}" [class.filled]="fill === 100"></i>
+                                            </ng-template>
+                                        </ngb-rating>
+                                    </div>
+                                    <div class="rate-content" matTooltip="{{ rate.review }}" [innerHtml]="
+                      rate.review.length > 160
+                        ? (rate.review | slice : 0 : 160) + '....'
+                        : rate.review
+                    "></div>
+                                    <div class="pt-2">
+                                        <h2 class="mb-0">
+                                            {{ rate.workteams.teams.users.display|titlecase }}
+                                        </h2>
+                                        <span> {{ rate.workteams.teams.role }}</span>
+                                    </div>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-carousel>
+            </div>
+        </div>
+    </section> -->
+
+    <section class="team-members">
+        <div class="row mx-0 achivement">
+            <div class="col-md-4">
+                <h2 class="blue mb-3 text-center fs-50">100+</h2>
+                <h3 class="contant-p text-center h2">Agencies</h3>
+            </div>
+            <div class="col-md-4">
+                <h2 class="blue mb-3 text-center fs-50">600+</h2>
+                <h3 class="contant-p text-center h2">Professionals</h3>
+            </div>
+            <div class="col-md-4">
+                <h2 class="blue mb-3 text-center fs-50">150+</h2>
+                <h3 class="contant-p text-center h2">Clients</h3>
+            </div>
+        </div>
+    </section>
+    <!-- <section class="our-blog px-md-4 px-2 mx-1" *ngIf="posts.length > 0">
+        <div class="header text-center">
+            <h2 class="blue fs-1 mb-5">Our Blog</h2>
+        </div>
+        <div class="row mx-0 post-card" *ngIf="posts.length>0 && !loading">
+            <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 mb-4 px-md-2 px-0" *ngFor="let post of (posts | multiKeyFilter:['title', 'categories.title', 'content']:searchQuery) | paginate: { itemsPerPage: 12, currentPage: pageNumber }">
+                <div class="post-item card h-100">
+                    <img loading="lazy" role="button" routerLink="/blog/{{post.slug}}" src="{{post.thumbnail}}" class="card-img-top" alt="{{post.title}}">
+                    <a class="img-badge badge text-bg-warning" routerLink="/blog/category/{{post.categories.slug}}">{{post.categories.title}}</a>
+                    <div class="card-body">
+                        <h2 class="card-title mb-2 h2" routerLink="/blog/{{post.slug}}" role="button">{{post.title}}</h2>
+                        <p class="card-text"><small class="text-muted">Posted on: {{post.timestamp | date:'MMM d, y' }}</small></p>
+                        <p class="card-text" [innerHtml]="(post.content.length>120) ? (post.content | slice:0:120)+'...' : (post.content)"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <section>
+        <div class="questions blueBG row mx-0">
+            <div class="col-md-4">
+                <h2 class="fs-1 lh-sm ps-md-3 ps-2">Frequently Asked Questions</h2>
+            </div>
+            <div class="col-md-8">
+                <mat-tab-group animationDuration="0ms" (selectedTabChange)="FaqChange($event.tab)">
+                    <mat-tab label="Agencies"></mat-tab>
+                    <mat-tab label="Professionals"></mat-tab>
+                    <mat-tab label="Clients"> </mat-tab>
+                </mat-tab-group>
+                <mat-expansion-panel *ngFor="let faq of FaqSet">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>{{ faq.question }}</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <p>{{ faq.answer }}</p>
+                    <mat-divider></mat-divider>
+                </mat-expansion-panel>
+            </div>
+        </div>
+
+        <div class="questions-card px-md-4 px-2 mx-1">
+            <mat-card class="row p-md-3 p-2 mx-0">
+                <div class="iphones col-md-3 px-md-2 px-0 ps-md-5 ps-0">
+                    <img loading="lazy" alt="image" src="assets/images/home-page/mockup2.png" class="iphone1" />
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-7 d-flex align-items-center px-md-2 px-0">
+                    <div>
+                        <h2 class="navy-blue mb-3 fs-1 lh-sm">Get Security Troops App</h2>
+                        <p>
+                            Download the Security Troops app for your Serenity. Stay secure with just a tap!. Your safety is just a click away. Experience security at your fingertips.
+                        </p>
+
+                        <div class="pt-4">
+                            <a target="_blank" class="me-2" href="{{auth.playStore}}">
+                                <img class="GooglePlayStore" loading="lazy" alt="Play Store" src="assets/images/home-page/GooglePlayStore.png" />
+                            </a>
+                            <a target="_blank" class="me-2" href="{{auth.appStore}}">
+                                <img class="appstore" loading="lazy" alt="Apple Store" src="assets/images/home-page/appstore.png" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </section>
+</div>

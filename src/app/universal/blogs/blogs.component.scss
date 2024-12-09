@@ -1,0 +1,54 @@
+.header {
+    h1.title {
+        color: #fff;
+        font-size: 30px;
+        font-weight: bold;
+    }
+    p {
+        color: #fff;
+        line-height: 2;
+    }
+}
+
+.post-item {
+    .card-title {
+        font-weight: 500;
+        font-size: 20px;
+    }
+    .card-text {
+        font-size: 14px;
+        margin: 0px;
+        small {
+            font-size: 12px;
+        }
+    }
+    .card-img-top {
+        height: 210px;
+        min-height: 80px;
+        object-fit: cover;
+        background-color: #f4f4f4;
+    }
+    .img-badge {
+        position: sticky;
+        width: min-content;
+        padding: 5px 10px;
+        font-size: 14px !important;
+        margin: -30px 14px 10px;
+        cursor: pointer;
+    }
+    .badge {
+        font-size: 12px;
+        text-decoration: none;
+    }
+    .badge:hover {
+        color: #fff !important;
+    }
+}
+
+.section-split {
+    right: 0px;
+    position: absolute;
+    height: 100%;
+    top: 0px;
+    border-right: 1px solid #dee2e6;
+}
