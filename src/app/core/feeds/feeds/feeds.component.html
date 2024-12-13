@@ -1,0 +1,300 @@
+<div class="feed-list postlist {{(professional || companyFeebs) ?'':'p-md-4 p-2'}}">
+    <div class="Postdetails">
+        <div class="postHeader d-md-none d-block" *ngIf='!professional  && !companyFeebs'>
+            <div class="pb-4 px-1">
+                <h1 class="text-center mb-1">Welcome to Our Feeds</h1>
+                <p class="text-center ">Get ready for interesting posts and updates. Stay tuned for fun and informative content!</p>
+            </div>
+        </div>
+        <div class=" post-card mx-0 ">
+            <div class="feeb-content post-item">
+                <div class="">
+                    <div class="postHeader d-md-block d-none" *ngIf='!professional  && !companyFeebs'>
+                        <div class="pb-4">
+                            <h1 class="text-center">Welcome to Our Feeds</h1>
+                            <p class="text-center">Get ready for interesting posts and updates. Stay tuned for fun and informative content!</p>
+                        </div>
+                    </div>
+                    <div class="row mx-0 position-relative switch-position">
+                        <div class="{{(professional || companyFeebs) ?'col-12':'col-md-8 pe-md-2'}}  px-0">
+                            <app-skeleton [items]="2" [layout]="12" *ngIf="loading"></app-skeleton>
+                            <mat-card class="rounded p-2 mb-2 mx-md-0 " *ngIf='!professional && !companyFeebs'>
+                                <div class="d-flex align-items-center">
+                                    <div class="pe-2">
+                                        <img loading="lazy" class="user-img" width="40px" height="40px" [src]="loginUser?.image" alt="user image" onerror="this.src='../assets/images/st.png'">
+                                    </div>
+                                    <div class="w-100 ">
+                                        <div role="button" class="border rounded p-2" (click)="feedPost('add')">
+                                            <span>What's on your mind, {{loginUser?.display?loginUser?.display+'?':loginUser?.username+'?'}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-2 d-flex justify-content-center border-top mt-2 ">
+                                    <div (click)="feedPost('add')" class="d-flex align-items-center" role="button">
+                                        <mat-icon>photo_library</mat-icon>
+                                        <span class="ps-2">Photo/Video</span>
+                                    </div>
+                                </div>
+                            </mat-card>
+                            <div class="No_Data" *ngIf="dataSource.filteredData?.length==0 && !loading">
+                                <img class="w-100" loading="lazy" src="assets/images/no_projects.png" alt="data not found">
+                                <h2> No Feeds Found...</h2>
+                            </div>
+                            <div class="mb-3" *ngFor="let post of dataSource.filteredData  ,let i = index">
+                                <mat-card class="example-card w-100 h-100 p-md-3 p-2 mx-md-0 rounded">
+                                    <div class="row mx-0 pb-2">
+                                        <div class="col-10 d-flex px-0">
+                                            <div class="pe-2 d-flex align-items-center">
+                                                <img *ngIf="post?.companies" loading="lazy" [routerLink]="'/company/' + post?.companies?.slug" role="button" class="user-img" width="50px" height="50px" [src]="post?.companies?.logo" alt="company logo" onerror="this.src='../assets/images/st.png'">
+                                                <img *ngIf="!post?.companies" loading="lazy" [routerLink]="'/professional/' + post?.authors?.username" role="button" class="user-img" width="50px" height="50px" [src]="post?.authors?.image" alt="user image" onerror="this.src='../assets/images/st.png'">
+                                            </div>
+                                            <div>
+                                                <div *ngIf="post?.companies" class="mb-0 text-dark h4 text-break" role="button" [routerLink]="'/company/' + post?.companies?.slug">
+                                                    {{post.companies.name}}
+                                                </div>
+                                                <div *ngIf="!post?.companies" class="mb-0 text-dark h4 text-break" role="button" [routerLink]="'/professional/' + post?.authors?.username">
+                                                    {{post.authors.display|titlecase}}
+                                                </div>
+                                                <small>{{timeAlgo(post.timestamp)}}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 px-0 d-flex justify-content-end align-items-center" *ngIf="loginUser">
+                                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" class="pcard-ic">
+                                                <mat-icon>more_horiz</mat-icon>
+                                            </button>
+                                        </div>
+                                        <mat-menu #menu="matMenu">
+                                            <button mat-menu-item routerLink="/app/feeds/{{post.slug}}">
+                                                <mat-icon class="z-3" matTooltip="View" >visibility</mat-icon>
+                                                <span>Detail</span>
+                                            </button>
+                                            <button mat-menu-item (click)="feedPost(post)" *ngIf="loginUser?.id==post?.author || selectedCompany?.me?.user=='staff user'">
+                                                <mat-icon>edit</mat-icon>
+                                                <span>Edit</span>
+                                            </button>
+                                            <button mat-menu-item (click)="deleteDialog(post ,i)" *ngIf="loginUser?.id==post?.author || selectedCompany?.me?.user=='staff user'">
+                                                <mat-icon>delete</mat-icon>
+                                                <span>Delete</span>
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                    <div *ngIf="post.content" class=" p-2">
+                                        <div class="mb-1 fs-6 lh-sm text-justify text-break" [matTooltipPosition]="'left'" matTooltip="{{post.content}}" [innerHtml]="(post.content.length>400) ? (post.content | slice:0:400)+'....' : (post.content) "></div>
+                                    </div>
+                                    <div class=" d-flex justify-content-center  position-relative " *ngIf="imageType.includes(post?.file?.split('.')?.pop()?.toLowerCase())">
+                                        <img loading="lazy" [src]="post.file" alt="{{post.authors.username}}" class="card-img-top w-100  rounded-3">
+                                    </div>
+                                    <div *ngIf="!imageType.includes(post?.file?.split('.')?.pop()?.toLowerCase())">
+                                        <div class="w-100 text-center" *ngIf="post.file">
+                                            <video *ngIf="['mp4', 'webm', 'ogg'].includes(post.file.split('.').pop().toLowerCase())" class="video-content" controls name="media">
+                                                <source [src]="post.file | safePipe" >
+                                            </video>
+                                            <embed *ngIf="!['mp4', 'webm', 'ogg'].includes(post.file.split('.').pop().toLowerCase())" class="embed-content" controls="controls" [src]="post.file | safePipe" width="100%">
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between border-bottom py-2 feed-action">
+                                        <div class="d-flex" *ngIf="loginUser">
+                                            <div class="d-flex align-items-center st-border rounded me-2 px-2" role="button" (click)="likePost(post)">
+                                                <svg matTooltip="Like" class="me-1" *ngIf="!post.likes?.includes(loginUser?.id)" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>
+                                                <mat-icon matTooltip="Like" *ngIf="post.likes?.includes(loginUser?.id)" class="me-1 text-aqua-blue1">thumb_up</mat-icon>
+                                                <span class=" text-aqua-blue1 d-md-block d-none">{{post?.likes?.length > 0 ? post?.likes?.length : ''}} Like</span>
+                                            </div>
+                                            <div role="button" routerLink="/app/feeds/{{post.slug}}" class="d-flex align-items-center st-border rounded px-2">
+                                                <svg matTooltip="Comment" class="me-1" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
+                                                <span class=" text-aqua-blue1 d-md-block d-none">{{post?.comments?.length > 0 ? post?.comments?.length : ''}} Comment</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex" *ngIf="!loginUser">
+                                            <div class="d-flex align-items-center st-border rounded me-2 px-2" role="button" (click)="loginForm()">
+                                                <svg matTooltip="Like" class="me-1" *ngIf="!post.likes?.includes(loginUser?.id)" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)"><path d="M720-120H280v-520l280-280 50 50q7 7 11.5 19t4.5 23v14l-44 174h258q32 0 56 24t24 56v80q0 7-2 15t-4 15L794-168q-9 20-30 34t-44 14Zm-360-80h360l120-280v-80H480l54-220-174 174v406Zm0-406v406-406Zm-80-34v80H160v360h120v80H80v-520h200Z"/></svg>
+                                                <mat-icon matTooltip="Like" *ngIf="post.likes?.includes(loginUser?.id)" class="me-1 text-aqua-blue1">thumb_up</mat-icon>
+                                                <span class=" text-aqua-blue1 d-md-block d-none">{{post?.likes?.length > 0 ? post?.likes?.length : ''}} Like</span>
+                                            </div>
+                                            <div role="button" (click)="loginForm()" class="d-flex align-items-center st-border rounded px-2">
+                                                <svg matTooltip="Comment" class="me-1" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--primary-color)"><path d="M240-400h480v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
+                                                <span class=" text-aqua-blue1 d-md-block d-none">{{post?.comments?.length > 0 ? post?.comments?.length : ''}} Comment</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-50 d-flex align-items-center justify-content-end">
+                                            <button mat-stroked-button class=" st-button" (click)="shareDialog(post)">
+                                                <mat-icon role="button" class="blue m-1" >share</mat-icon>
+                                              <span class="d-md-block d-none"> Share</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="post?.comments?.length>0">
+                                        <div *ngIf="post?.comments?.length>1 " class="fw-bold text-secondary   pt-2">
+                                            <span role="button" routerLink="/app/feeds/{{post.slug}}">view more comments</span>
+                                        </div>
+                                        <div class="pt-2">
+                                            <ul class="nav flex-column w-100">
+                                                <li>
+                                                    <ng-container>
+                                                        <div class="w-100 mb-2 d-flex justify-content-start">
+                                                            <div class="">
+                                                                <div class="data-card d-flex p-2 pe-3 rounded">
+                                                                    <div>
+                                                                        <img loading="lazy" src="{{post.comments[0]?.users?.image}}" onerror="this.src='../assets/images/st.png'" class="comment-user-img" alt="{{post.comments[0]?.users?.display}}">
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="mb-0 text-dark">{{post.comments[0]?.users?.display|titlecase}}</div>
+                                                                        <div class="text-secondary content-text text-break">{{post.comments[0]?.content}}</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class=" d-flex">
+                                                                    <small class="text-muted pe-2">{{timeAlgo(post.comments[0]?.timestamp)}}</small>
+                                                                    <small role="button" class="text-info reply-link link" (click)="reply(post.comments[0])" *ngIf="loginUser && (post.comments[0]?.id  !== replyTo?.id)">
+                                                                        <mat-icon>reply</mat-icon>
+                                                                        Reply
+                                                                    </small>
+                                                                    <small role="button" class="text-info reply-link link" (click)="loginForm()" *ngIf="!loginUser">
+                                                                        <mat-icon>reply</mat-icon>
+                                                                        Reply
+                                                                    </small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <ul class="nav flex-column  reply-card rounded-3 mb-2 w-100 ms-3" *ngIf="(post.comments[0]?.id == showReply?.id)">
+                                                            <li *ngFor="let reply of post.comments[0]?.replies;let i=index" class="p-2 nav-item {{i==0 ? '' : 'border-top'}}">
+                                                                <ng-container *ngIf="reply.status=='Active' || reply.user == loginUser?.id">
+                                                                    <div class="w-100 d-flex justify-content-start">
+                                                                        <div>
+                                                                            <div class=" d-flex data-card rounded p-2 pe-3">
+                                                                                <div>
+                                                                                    <img loading="lazy" src="{{reply?.users?.image}}" onerror="this.src='../assets/images/st.png'" class="comment-user-img" alt="{{reply?.users?.display}}">
+                                                                                </div>
+                                                                                <div>
+                                                                                    <div class="mb-0 text-dark">{{reply?.users?.display|titlecase}}</div>
+                                                                                    <div class="text-secondary content-text text-break">{{reply.content}}</div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <small class="text-muted pe-2">{{timeAlgo(reply.timestamp)}}</small>
+                                                                        </div>
+                                                                    </div>
+                                                                </ng-container>
+                                                            </li>
+                                                            <li *ngIf="post.comments[0]?.replies?.length==0 || !post.comments[0]?.replies">
+                                                                <div class="mb-0 p-2 text-muted h5">No replies...</div>
+                                                            </li>
+                                                        </ul>
+                                                        <form class=" ms-3 mt-2 p-3 reply-card-form  rounded-3" *ngIf="loginUser && (post.comments[0]?.id == replyTo?.id)" (ngSubmit)="postComment(post.comments[0],post)">
+                                                            <div class="h6"> Reply to {{post.comments[0]?.users?.display|titlecase}} </div>
+                                                            <div class="mx-0">
+                                                                <div class="col-12 px-0">
+                                                                    <mat-form-field appearance="outline" class="w-100 st-input st-mat-ff">
+                                                                        <textarea class="mb-2" [(ngModel)]="post.userReply" matInput placeholder="Write a reply..."></textarea>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                                <div class="col-12 text-end pt-2 px-0">
+                                                                    <button *ngIf="loginUser" (click)="cancelReply('feed')" class="me-3" mat-button type="button" mat-raised-button color="basic">
+                                                                        Cancel
+                                                                    </button>
+                                                                    <button *ngIf="loginUser" mat-button type="submit" mat-raised-button [disabled]="!post.userReply" color="primary">
+                                                                        Reply
+                                                                    </button>
+                                                                    <button *ngIf="!loginUser" (click)="loginForm()" mat-button type="button" mat-raised-button [disabled]="!post.userReply" color="primary">
+                                                                        Reply
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                        <div class="w-100 d-flex ms-3">
+                                                            <div class="py-2" *ngIf="post.comments[0]?.replies?.length>0">
+                                                                <span role="button" class="link text-info fw-bold" (click)="viewReply(post.comments[0])"> {{(post.comments[0]?.id == showReply?.id) ? 'Hide replies' : post.comments[0]?.replies?.length>1 ? 'View all '+post.comments[0]?.replies?.length + ' replies':'View reply'}} </span>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex w-100 mx-0 pt-2">
+                                        <div class="pe-2">
+                                            <img loading="lazy" class=" user-img" width="35px" height="35px" [src]="loginUser?.image" alt="user profile " onerror="this.src='../assets/images/st.png'">
+                                        </div>
+                                        <div class="w-100 ">
+                                            <form class="  " (ngSubmit)="postComment(null,post)">
+                                                <mat-form-field appearance="outline" class="w-100 st-input st-mat-ff pb-2">
+                                                    <textarea [(ngModel)]="post.userComment" class="mb-2" matInput placeholder="Write a comment..."></textarea>
+                                                </mat-form-field>
+                                                <div class="col-12 text-end py-2 px-0 ">
+                                                    <button *ngIf="loginUser" [disabled]="!post.userComment" mat-button type="submit" mat-raised-button color="primary">
+                                                        Comment
+                                                    </button>
+                                                    <button (click)="loginForm()" *ngIf="!loginUser" [disabled]="!post.userComment" mat-button type="button" mat-raised-button color="primary">
+                                                        Comment
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                            <div class="Load-more d-flex pt-2" *ngIf="nextUrl">
+                                <button (click)="loadBlog()" mat-button class="mx-auto">
+                                    <mat-icon>keyboard_double_arrow_down</mat-icon>Load More
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4 ps-md-2 px-0 position-sticky" *ngIf='!professional  && !companyFeebs'>
+                            <app-skeleton [items]="2" [layout]="12" *ngIf="loading"></app-skeleton>
+                            <mat-card class="mb-2  rounded" *ngIf="!loading">
+                                <div>
+                                    <div class=" rounded-top  p-2 d-flex justify-content-between lrgradient align-items-center">
+                                        <span class="st_white fs-5 title">Connection Requests</span>
+                                        <a class="text-decoration-none st_white" routerLink="/app/connection-request">See All</a>
+                                    </div>
+                                    <ng-container *ngIf="connectionRequest.length>0">
+                                        <div class="mb-2 p-2 d-flex w-100  justify-content-between " *ngFor="let conn of connectionRequest, let i = index">
+                                            <div class="d-flex align-items-center">
+                                                <img src="{{conn?.users?.image}}" alt="{{conn?.users?.display}}" class="avatar me-2" onerror="this.src='../assets/images/st.png'">
+                                                <div class="fw-semibold"> <a routerLink="/professional/{{conn?.users?.username}}" class=" text-decoration-none text-dark">{{conn?.users?.display|titlecase }}</a></div>
+                                            </div>
+                                            <div class="form-actions d-flex">
+                                                <button class="edit-btn mx-1" matTooltip="Accept Connection" matTooltipPosition="before" mat-mini-fab color="primary" (click)="acceptConnection(conn ,i ,true)"><mat-icon
+                                                    aria-hidden="false">check</mat-icon></button>
+                                                <button class="delete-btn" matTooltip="Reject Connection" matTooltipPosition="before" mat-mini-fab color="warn" (click)="acceptConnection(conn ,i ,false)"><mat-icon
+                                                    aria-hidden="false">cancel</mat-icon></button>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <div *ngIf="connectionRequest.length==0">
+                                        <h4 class="mb-0 p-3 fw-semibold text-black-50">
+                                            No Connections Found
+                                        </h4>
+                                    </div>
+                                </div>
+                            </mat-card>
+
+                            <mat-card class="mb-2  rounded" *ngIf="!loading">
+                                <div class="p-2 rounded-top d-flex justify-content-between lrgradient align-items-center">
+                                    <span class="st_white fs-5 title">My Connections</span>
+                                    <a class="text-decoration-none st_white" routerLink="/app/connection">See All</a>
+                                </div>
+                                <ng-container *ngIf="myConnection.length>0">
+                                    <div class="p-2 pb-3 d-flex w-100 align-items-center justify-content-between" *ngFor="let conn of myConnection">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{conn?.users?.image}}" alt="{{conn?.users?.display}}" class="avatar me-2" onerror="this.src='../assets/images/st.png'">
+                                            <div class=""> <a routerLink="/professional/{{conn?.users?.username}}" class=" text-decoration-none text-dark  fw-semibold">{{conn?.users?.display|titlecase }}</a></div>
+                                        </div>
+                                        <div class="form-actions text-end ">
+                                            <button class="edit-btn" mat-mini-fab color="primary" (click)="userChat(loginUser.id ,conn.users.id,conn?.channel)">
+                                                <mat-icon class="z-3" matTooltip="Chat with {{conn?.users?.display}}" >chat</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div *ngIf="myConnection.length==0">
+                                    <h4 class="mb-0 p-3 fw-semibold text-black-50">
+                                        No Connections Found
+                                    </h4>
+                                </div>
+                            </mat-card>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

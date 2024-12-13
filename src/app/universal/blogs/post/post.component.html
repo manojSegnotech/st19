@@ -229,14 +229,19 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div class="col-12 px-md-2 px-0">
-                                <mat-form-field appearance="outline" class="w-100 content-area">
+                            <div class="col-12 px-md-2 px-0" *ngIf="editor">
+                                <!-- <mat-form-field appearance="outline" class="w-100 content-area">
                                     <mat-label>Message</mat-label>
                                     <textarea rows="4" matInput formControlName="content" placeholder="Enter Message"></textarea>
+
                                     <mat-error *ngIf="commentForm.controls['content'].hasError('required')">
                                         Message is <strong>required</strong>
                                     </mat-error>
-                                </mat-form-field>
+                                </mat-form-field> -->
+                                <div class="NgxEditor__Wrapper post-ngxediter">
+                                    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                                    <ngx-editor formControlName="content" [editor]="editor" [ngModel]="html" [disabled]="false"></ngx-editor>
+                                </div>
                             </div>
                             <div class="col-12 text-end px-md-2 px-0">
                                 <hr/>

@@ -37,8 +37,8 @@ export class AuthenticationService {
 
   loadCount = 0;
   // domain = '127.0.0.1:8000';
-  // domain = 'test.securitytroops.in'
-  domain = 'api.securitytroops.com'
+  domain = 'test.securitytroops.in'
+  // domain = 'api.securitytroops.com'
   // domain = '192.168.1.88:8000';
 
   // baseUrl: string = 'http://'+this.domain;
@@ -203,12 +203,12 @@ export class AuthenticationService {
   }
 
   saveFile(blob: Blob, fileName: string): void {
-    const downloadLink = this.document.createElement('a');
-    downloadLink.href = window.URL.createObjectURL(blob);
-    downloadLink.download = fileName;
-    this.document.body.appendChild(downloadLink);
-    downloadLink.click();
-    this.document.body.removeChild(downloadLink);
+    // const downloadLink = this.document.createElement('a');
+    // downloadLink.href = window.URL.createObjectURL(blob);
+    // downloadLink.download = fileName;
+    // this.document.body.appendChild(downloadLink);
+    // downloadLink.click();
+    // this.document.body.removeChild(downloadLink);
   }
 
   extractFileNameFromUrl(url: string): string {

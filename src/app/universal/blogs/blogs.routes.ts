@@ -12,5 +12,5 @@ export const routes: Routes = [
     { path: 'category', component: CategoryComponent },
     { path: 'tag', component: TagComponent },
     { path: ':slug', component: PostComponent },
-    {path:'',component:BlogsComponent},
+    { path:'',component:BlogsComponent },
 ];

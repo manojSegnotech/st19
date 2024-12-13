@@ -6,4 +6,8 @@ import { Injectable } from '@angular/core';
 export class PushNotificationService {
 
   constructor() { }
+  getPathForSection(sectionName: string,type:string,slug:any):any {}
+  getMessaging() {
+    
+  }
 }

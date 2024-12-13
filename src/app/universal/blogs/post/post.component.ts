@@ -13,10 +13,12 @@ import { AuthenticationService } from '../../../service/authentication.service';
 import { MetaService } from '../../../service/meta.service';
 import { SchemaDataService } from '../../../service/schema-data.service';
 import { SkeletonComponent } from "../../../shared/common/skeleton/skeleton.component";
+import { NgxEditorModule } from 'ngx-editor';
+import { Editor } from 'ngx-editor';
 
 @Component({
   selector: 'app-post',
-  imports: [BasicModule, SkeletonComponent],
+  imports: [BasicModule, SkeletonComponent,NgxEditorModule],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
 })
@@ -37,8 +39,9 @@ export class PostComponent {
   api:any='blogs/posts/'
   page:any ='blog'
   commentForm:any
-  replyForm:any
-  
+  replyForm:any  
+  editor: Editor | undefined;
+  html = '';
 
   get inf() { return this.commentForm.controls; }
 
@@ -83,14 +86,19 @@ export class PostComponent {
       this.commentForm.patchValue({user:this.profileData.id})
     }
   }
+ 
 
   ngOnDestroy(): void {
     this.title.setTitle("Security Troops");
     this.metaService.removeMetaTags();
     this.schemaDataService.removeScript()
+    if (this.editor) {
+      this.editor.destroy();
+    }
   }
 
   ngOnInit(): void {
+    this.editor = new Editor();
     if(this.profileData){
       const userData:any={
         name: this.profileData.display,
@@ -140,7 +148,7 @@ export class PostComponent {
       this.metaService.setMetaTags(this.postdetail?.meta_title,this.postdetail?.meta_description,this.postdetail?.thumbnail || this.postdetail?.image ,tags)
       if(this.postdetail){
         this.userAction = this.postdetail?.actions?.find((items: { user: any; })=>items.user==this.profileData?.id)
-        this.commentForm.patchValue({post:this.postdetail.id})
+        this.commentForm?.patchValue({post:this.postdetail.id})
       }
       this.comments=this.postdetail.comments
       // this.meta.addTags([{name: 'keywords',content:'Bodyguard, Bouncer, Home Guard, Gunman, Watchman, Valet, Field Officer, Supervisor, Housekeeping',},
@@ -251,7 +259,7 @@ export class PostComponent {
       this.commentForm.patchValue({post:this.postdetail.id})
       this.commentForm.patchValue({parent:null})
       this.replyForm.patchValue({user:this.profileData.id})
-
+      formValue=this.commentForm.getRawValue()
     }
     this.auth.postAPI('blogs/comment/',formValue).subscribe(res=>{
       if(res){

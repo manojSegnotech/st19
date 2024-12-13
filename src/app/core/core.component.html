@@ -1,0 +1,311 @@
+<mat-sidenav-container class="sidenav-container side2" (backdropClick)="close('backdrop')">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="isHandset$ ? 'dialog' : 'navigation'" [mode]="isHandset$ ? 'over' : 'side'" [opened]="isHandset$ === false">
+        <mat-nav-list class="pt-0">
+            <mat-toolbar class="tssidebar d-flex pe-4 justify-content-center align-items-center">
+                <a routerLink="/" class="mx-auto">
+                    <img loading="lazy" src="assets/images/dashboard/banner.png" height="55" alt="Security Stroops">
+                </a>
+                <mat-icon class="d-md-none d-block" role="button" (click)="drawer.close()">cancel</mat-icon>
+            </mat-toolbar>
+            <a mat-list-item class="side-bar-header side-tab my-auto" routerLink="/app" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: true}" routerLinkActive #rla="routerLinkActive" [ngClass]="[rla.isActive == true ? 'active': '']">
+                <span class='my-auto d-flex'><mat-icon class="me-2">home</mat-icon>Dashboard</span>
+            </a>
+            <a mat-list-item class="side-bar-header side-tab my-auto" routerLink="/app/feeds" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: true}" routerLinkActive #rla1="routerLinkActive" [ngClass]="[rla1.isActive == true ? 'active': '']">
+                <span class='my-auto d-flex'><mat-icon class="me-2">dynamic_feed</mat-icon>Feeds</span>
+            </a>
+            <a mat-list-item class="side-bar-header side-tab my-auto" routerLink="/app/connection" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: true}" routerLinkActive #rla2="routerLinkActive" [ngClass]="[rla2.isActive == true ? 'active': '']">
+                <span class='my-auto d-flex'><mat-icon class="me-2">diversity_2</mat-icon>Connections</span>
+            </a>
+            <a mat-list-item class="side-bar-header side-tab my-auto" routerLink="/app/connection-request" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: true}" routerLinkActive #rla3="routerLinkActive" [ngClass]="[rla3.isActive == true ? 'active': '']">
+                <span class='my-auto d-flex'><mat-icon class="me-2">group_add</mat-icon>Connection Requests</span>
+            </a>
+            <a mat-list-item class="side-bar-header side-tab my-auto" *ngIf="profile?.profession == 'Client'" routerLink="/app/work-request" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: false}" routerLinkActive
+                #rla4="routerLinkActive" [ngClass]="[rla4.isActive == true ? 'active': '']">
+                <span class='my-auto d-flex'><mat-icon class="me-2">work_update</mat-icon>Hire Company</span>
+            </a>
+            <a *ngIf="['Employee','Professional','Client'].includes(auth?.currentCompanyValue?.me?.role)" mat-list-item class="side-bar-header side-tab my-auto" routerLink="/app/jobs" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: true}"
+                routerLinkActive #rla5="routerLinkActive" [ngClass]="[rla5.isActive == true ? 'active': '']">
+                <span class='my-auto d-flex'><mat-icon class="me-2">work</mat-icon>Apply For Jobs</span>
+            </a>
+            <a *ngIf="['Employee','Professional','Client'].includes(profile?.profession)" mat-list-item class="side-bar-header side-tab my-auto" routerLink="/app/nearest-agencies" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: true}"
+                routerLinkActive #rla6="routerLinkActive" [ngClass]="[rla6.isActive == true ? 'active': '']">
+                <span class='my-auto d-flex'><mat-icon class="me-2">business</mat-icon>Nearest Agencies</span>
+            </a>
+            <a mat-list-item class="side-bar-header side-tab my-auto" routerLink="/app/panic-alert" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: false}" routerLinkActive #rla7="routerLinkActive" [ngClass]="[rla7.isActive == true ? 'active': '']">
+                <span class='my-auto d-flex'><mat-icon class="me-2">emergency_home</mat-icon>Panic Alert</span>
+            </a>
+            <div *ngFor="let item of auth?.headersList?.mapTracking">
+                <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab ps-2" routerLinkActive="active" routerLink="{{item.path }}">
+                    <mat-icon class="me-2">{{item.icon}}</mat-icon>{{item.name}}
+                </a>
+            </div>
+            <ng-container *ngIf="auth.companiesList.length">
+                <mat-accordion *ngFor="let item of auth?.headersList?.bussiness">
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="router.isActive(item.path,false)">
+                        <mat-expansion-panel-header mat-list-item class="side-bar-header side-tab" [class.active]="router.isActive(item.path,false)" [ngClass]="[router.isActive(item.path,false) == true ? 'actives': 'inactive']">
+                            <mat-panel-title class="my-auto d-flex">
+                                <mat-icon class="me-2">{{item.icon}}</mat-icon><span>{{item.name}}</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="subheadings" *ngFor="let subheading of item.subheadings">
+                            <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab px-2" routerLinkActive="active" routerLink="{{ subheading.path }}">
+                                <mat-icon class="me-2">{{ subheading.icon }}</mat-icon>{{ subheading.name }}
+                            </a>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion *ngFor="let item of auth?.headersList?.hr_management">
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="router.isActive(item.path,false)">
+                        <mat-expansion-panel-header class="side-bar-header" [class.active]="router.isActive(item.path,false)" [ngClass]="[router.isActive(item.path,false) == true ? 'actives': 'inactive']">
+                            <mat-panel-title class="my-auto d-flex">
+                                <mat-icon class="me-2">{{item.icon}}</mat-icon><span>{{item.name}}</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="subheadings" *ngFor="let subheading of item.subheadings">
+                            <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab px-2" routerLinkActive="active" routerLink="{{ subheading.path }}">
+                                <mat-icon class="me-2">{{ subheading.icon }}</mat-icon>{{ subheading.name }}
+                            </a>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion *ngFor="let item of auth?.headersList?.patrolling">
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="router.isActive(item.path,false)">
+                        <mat-expansion-panel-header class="side-bar-header" [class.active]="router.isActive(item.path,false)" [ngClass]="[router.isActive(item.path,false) == true ? 'actives': 'inactive']">
+                            <mat-panel-title class="d-flex">
+                                <mat-icon class="me-2">{{item.icon}}</mat-icon><span>{{item.name}}</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div *ngFor="let subheading of item.subheadings">
+                            <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab px-2" routerLinkActive="active" routerLink="{{ subheading.path }}">
+                                <mat-icon class="me-2">{{ subheading.icon }}</mat-icon>{{ subheading.name }}
+                            </a>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion *ngFor="let item of auth?.headersList?.inventory">
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="router.isActive(item.path,false)">
+                        <mat-expansion-panel-header class="side-bar-header" [class.active]="router.isActive(item.path,false)" [ngClass]="[router.isActive(item.path,false) == true ? 'actives': 'inactive']">
+                            <mat-panel-title class="d-flex">
+                                <mat-icon class="me-2">{{item.icon}}</mat-icon><span>{{item.name}}</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div *ngFor="let subheading of item.subheadings">
+                            <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab px-2" routerLinkActive="active" routerLink="{{ subheading.path }}">
+                                <mat-icon class="me-2">{{ subheading.icon }}</mat-icon>{{ subheading.name }}
+                            </a>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+
+                <mat-accordion *ngFor="let item of auth?.headersList?.job">
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="router.isActive(item.path,false)">
+                        <mat-expansion-panel-header class="side-bar-header" [class.active]="router.isActive(item.path,false)" [ngClass]="[router.isActive(item.path,false) == true ? 'actives': 'inactive']">
+                            <mat-panel-title class="d-flex">
+                                <mat-icon class="me-2">{{item.icon}}</mat-icon><span>{{item.name}}</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div *ngFor="let subheading of item.subheadings">
+                            <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab px-2" routerLinkActive="active" routerLink="{{ subheading.path }}">
+                                <mat-icon class="me-2">{{ subheading.icon }}</mat-icon>{{ subheading.name }}
+                            </a>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+
+                <mat-accordion *ngFor="let item of auth?.headersList?.accounting">
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="router.isActive(item.path,false)">
+                        <mat-expansion-panel-header class="side-bar-header" [class.active]="router.isActive(item.path,false)" [ngClass]="[router.isActive(item.path,false) == true ? 'actives': 'inactive']">
+                            <mat-panel-title class="d-flex">
+                                <mat-icon class="me-2">{{item.icon}}</mat-icon><span>{{item.name}}</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div *ngFor="let subheading of item.subheadings">
+                            <!-- [ngClass]="{
+                                'active': router.isActive('/app/accounting/invoice-detail',false) == true && subheading.name=='Invoice' || router.isActive('/app/accounting/invoice',false) == true && subheading.name=='Invoice'
+                              }" -->
+
+                            <a mat-button [ngClass]="{
+                                'active': router.isActive('/app/accounting/invoice-detail',false) == true && subheading.name=='Invoice' 
+                              }" (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab px-2 " routerLinkActive="active" routerLink="{{ subheading.path }}">
+                                <mat-icon class="me-2">{{ subheading.icon }}</mat-icon>{{ subheading.name }}
+                            </a>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion *ngFor="let item of auth?.headersList?.lead">
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="router.isActive(item.path,false)">
+                        <mat-expansion-panel-header class="side-bar-header" [class.active]="router.isActive(item.path,false)" [ngClass]="[router.isActive(item.path,false) == true ? 'actives': 'inactive']">
+                            <mat-panel-title class="d-flex">
+                                <mat-icon class="me-2">{{item.icon}}</mat-icon><span>{{item.name}}</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div *ngFor="let subheading of item.subheadings">
+                            <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab px-2" routerLinkActive="active" routerLink="{{ subheading.path }}">
+                                <mat-icon class="me-2">{{ subheading.icon }}</mat-icon>{{ subheading.name }}
+                            </a>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+
+            </ng-container>
+            <!-- <mat-accordion>
+                <mat-expansion-panel (opened)="profileOpenState = true" (closed)="profileOpenState = false"
+                    [expanded]="router.isActive('profile',false)">
+                    <mat-expansion-panel-header class="side-bar-header"
+                        [class.active]="router.isActive('profile',false)">
+                        <mat-panel-title>
+                            <mat-icon class="me-2">person</mat-icon><span>Profile</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div>
+                        <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto w-100 justify-content-start side-tab ps-3" routerLinkActive="active"
+                            routerLink="/app/profile/measurement" *ngIf="profile?.service == 'Professional' ">
+                            <mat-icon class="me-2">straighten</mat-icon>Measurement
+                        </a>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion> -->
+            <div *ngFor="let item of auth?.headersList?.message">
+                <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab ps-2" routerLinkActive="active" routerLink="{{item.path }}">
+                    <mat-icon class="me-2">{{item.icon}}</mat-icon>{{item.name}}
+                </a>
+            </div>
+            <ng-container *ngIf="auth.companiesList.length">
+                <div *ngFor="let item of auth?.headersList?.id">
+                    <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab ps-2" routerLinkActive="active" routerLink="{{item.path }}">
+                        <mat-icon class="me-2">{{item.icon}}</mat-icon>{{item.name}}
+                    </a>
+                </div>
+
+                <!-- <mat-accordion *ngFor="let item of auth?.headersList?.society">
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+                        [expanded]="router.isActive(item.path,false)">
+                        <mat-expansion-panel-header class="side-bar-header"
+                            [class.active]="router.isActive(item.path,false)"
+                            [ngClass]="[router.isActive(item.path,false) == true ? 'actives': 'inactive']">
+                            <mat-panel-title>
+                                <mat-icon class="me-2">{{item.icon}}</mat-icon><span>{{item.name}}</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div *ngFor="let subheading of item.subheadings">
+                            <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab px-2"
+                                routerLinkActive="active" routerLink="{{ subheading.path }}">
+                                <mat-icon class="me-2">{{ subheading.icon }}</mat-icon>{{ subheading.name }}
+                            </a>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion> -->
+            </ng-container>
+            <div *ngFor="let item of auth?.headersList?.refer">
+                <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab ps-2" routerLinkActive="active" routerLink="{{item.path }}">
+                    <mat-icon class="me-2">{{item.icon}}</mat-icon>{{item.name}}
+                </a>
+            </div>
+            <ng-container *ngIf="['Owner','Admin','Client','Manager'].includes(auth?.currentCompanyValue?.me?.role)">
+                <a mat-list-item class="side-bar-header  my-auto" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: true}" routerLinkActive #rla10="routerLinkActive" [ngClass]="[rla10.isActive == true ? 'active': '']" routerLink="/app/support">
+                    <span class='my-auto d-flex'><mat-icon class="me-2">support</mat-icon>Support</span>
+                </a>
+                <a mat-list-item class="side-bar-header  my-auto" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: true}" routerLinkActive #rla11="routerLinkActive" [ngClass]="[rla11.isActive == true ? 'active': '']" routerLink="/app/feedback">
+                    <span class='my-auto d-flex'><mat-icon class="me-2">feedback</mat-icon>Send Feedback</span>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="['Reseller'].includes(profile?.profession)">
+                <mat-accordion *ngFor="let item of auth?.headersList?.reseller">
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="router.isActive(item.path,false)">
+                        <mat-expansion-panel-header class="side-bar-header" [class.active]="router.isActive(item.path,false)" [ngClass]="[router.isActive(item.path,false) == true ? 'actives': 'inactive']">
+                            <mat-panel-title class="d-flex">
+                                <mat-icon class="me-2">{{item.icon}}</mat-icon><span>{{item.name}}</span>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div *ngFor="let subheading of item.subheadings">
+                            <a mat-button (click)="mobileView === true ? drawer.close() : drawer.open()" class="my-auto d-flex w-100 justify-content-start side-tab px-2" routerLinkActive="active" routerLink="{{ subheading.path }}">
+                                <mat-icon class="me-2">{{ subheading.icon }}</mat-icon>{{ subheading.name }}
+                            </a>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </ng-container>
+            <ng-container *ngIf="!auth.companiesList.length && profile?.profession == 'Agency'">
+                <a mat-list-item class="side-bar-header side-tab my-auto" routerLink="/app/agency/company/add" (click)="mobileView === true ? drawer.close() : drawer.open()" [routerLinkActiveOptions]="{exact: true}" routerLinkActive #rla12="routerLinkActive" [ngClass]="[rla12.isActive == true ? 'active': '']">
+                    <span class='my-auto d-flex'><mat-icon class="me-2">add</mat-icon>Add agency</span>
+                </a>
+            </ng-container>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class='mainsidebar' [ngClass]="{ 'app-message-open': router.isActive('app/messages',false) == true }">
+        <mat-toolbar class="tsMatToolbar">
+            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$">
+                <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+            </button>
+            <div class="row mx-0 w-100">
+                <div class="col-md-6 my-auto d-md-block d-none">
+                    <mat-form-field appearance="outline" class="st-select-input ">
+                        <mat-label>{{auth.companiesList.length ? 'Select a Company' : 'No company'}}
+                        </mat-label>
+                        <mat-select [(value)]="auth.currentCompanyValue.identifier" (selectionChange)="companySwitch($event.value)">
+                            <mat-option *ngFor="let cmp of auth.companiesList" [value]="cmp.identifier">{{cmp.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6 text-end px-0">
+                    <div class="my-auto">
+                        <button class="my-auto me-2 " mat-mini-fab color="primary" (click)="sidenav.open()"><mat-icon
+                                matBadge="{{notifyCount}}"
+                                matBadgeColor="warn">notifications_active</mat-icon></button>
+                        <button mat-button class="my-auto py-2 mb-2 st_white account" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+                           <span class="d-md-block d-none"> {{auth.userValue?.display|titlecase}}</span> <mat-icon class="me-2">person</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="before">
+                            <button mat-menu-item routerLink="/app/profile">Profile</button>
+                            <!-- <button mat-menu-item (click)="demoRequest()">Apply Demo Request</button> -->
+                            <button mat-menu-item (click)="logout()">Logout</button>
+                            <mat-form-field appearance="outline" class="st-select-input theme-option d-md-none mx-2">
+                                <mat-label>{{auth.companiesList.length ? 'Select a Company' : 'No company available'}}
+                                </mat-label>
+                                <mat-select [(value)]="company.identifier" (selectionChange)="companySwitch($event.value)">
+                                    <mat-option *ngFor="let cmp of auth.companiesList" [value]="cmp.identifier">{{cmp.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <button mat-menu-item (click)="fullScreenToggle()" class="d-md-none d-flex align-items-center "><mat-icon>{{fullScreen?'close_fullscreen':'open_in_full'}}</mat-icon>{{fullScreen?'Close fullscreen':'Open fullscreen'}}</button>
+                        </mat-menu>
+                    </div>
+                </div>
+            </div>
+        </mat-toolbar>
+
+        <ng-container *ngIf="companiesLoaded">
+            <router-outlet>
+            </router-outlet>
+        </ng-container>
+    </mat-sidenav-content>
+    <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose position="end" class="notifyBar">
+        <div class="d-flex justify-content-between p-3">
+            <h1 role="button" (click)="closeSidenavAndNavigate()">Notifications({{notifyCount}})</h1>
+            <mat-icon role="button" (click)="sidenav.close()">cancel</mat-icon>
+        </div>
+        <div class="my-auto" *ngIf="notifications.length>0">
+            <mat-checkbox (change)="toggleSelectAll($event)" [checked]='notifications.length ==  selectedIds.length' color="primary">Select All</mat-checkbox>
+        </div>
+        <div class="pb-5">
+            <mat-card class=" mb-3 p-2 d-flex justify-content-between align-items-center" [class.readed]="notify.read" *ngFor="let notify of notifications">
+                <div class="me-2 d-flex align-items-center">
+                    <mat-checkbox class="" [checked]="selectedIds.includes(notify.id)" value="{{notify.id}}" (change)="updateChecks(notify.id,$event.checked)" color="primary"></mat-checkbox>
+                    <div class="rounded-circle bg-white p-1 me-1">
+                        <img loading="lazy" class="rounded-circle img-cover" width="47px" height="47px" [src]=notify.image onError="this.src='assets/images/st_white.png'" alt="Security Stroops">
+                    </div>
+                    <div>
+                        <div title="{{notify.title}}" class="mb-0 fw-bold z-3 text-break" role="button" (click)="notifyRedirection(notify,'single')" [innerHtml]="(notify.title.length>120) ? (notify.title | slice:0:120)+'....' : (notify.title) ">
+                        </div>
+                        <div class="z-3" title="{{notify.body}}" [innerHtml]="(notify.body.length>120) ? (notify.body | slice:0:120)+'....' : (notify.body) "></div>
+                    </div>
+                </div>
+                <div class="date">{{timeAlgo(notify.timestamp)}}</div>
+            </mat-card>
+        </div>
+
+        <div *ngIf="notifications.length>0" class="notify-footer position-absolute bottom-0 w-100 p-2 d-flex justify-content-around">
+            <button type="submit" mat-flat-button class="my-auto {{notifyCount>0?'text-aqua-blue':'st_white'}} me-1" [disabled]="notifyCount==0" (click)="notifyRedirection('notify','all')"><mat-icon class="me-2">done_all</mat-icon> Mark as read</button>
+            <button type="submit" mat-flat-button class="my-auto text-aqua-blue " (click)="notifyRedirection('notify','archive')"><mat-icon class="me-2">archive</mat-icon>Archive</button>
+        </div>
+    </mat-sidenav>
+</mat-sidenav-container>

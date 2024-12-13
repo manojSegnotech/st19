@@ -26,6 +26,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSliderModule } from '@angular/material/slider';
 import { RouterModule } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatBadgeModule} from '@angular/material/badge';
+
+// import { NgxEditorModule } from 'ngx-editor';
 
 @NgModule({
   declarations: [],
@@ -60,7 +64,9 @@ import { DatePipe } from '@angular/common';
     MatSelectModule,
     MatGridListModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    MatTooltipModule,
+    MatBadgeModule
   ],
   exports: [
     CommonModule,
@@ -93,7 +99,9 @@ import { DatePipe } from '@angular/common';
     MatSelectModule,
     MatGridListModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    MatTooltipModule,
+    MatBadgeModule
   ], 
   providers: [
     DatePipe,

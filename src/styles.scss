@@ -1,8 +1,8 @@
 @use "bootstrap/scss/bootstrap" as *;
+
 /* You can add global styles to this file, and also import other style files */
 
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
-
 html,
 body {
     height: 100%;
@@ -820,32 +820,10 @@ pagination-controls {
     border-radius: 20px;
 }
 
-.post-ckediter {
-    .ck-editor {
-        display: flex;
-        flex-direction: column;
-    }
-    .ck-editor__main {
-        order: 1;
-    }
-    .ck-editor__top {
-        order: 2;
-        border-bottom: 1px solid #cccaca !important;
-    }
-    .ck-toolbar {
-        border-bottom-left-radius: 4px !important;
-        border-bottom-right-radius: 4px !important;
-        border-top: 0 !important;
-        border-color: var(--bs-border-color) !important;
-    }
-    .ck-editor__editable {
-        height: 150px;
-        border-top-left-radius: 4px !important;
-        border-top-right-radius: 4px !important;
-    }
-    .ck-reset_all {
-        border-radius: 4px !important;
-        border-color: var(--bs-border-color) !important;
+.post-ngxediter {
+    .NgxEditor__Content {
+        height: 138px;
+        overflow-y: auto;
     }
 }
 
@@ -964,17 +942,6 @@ pagination-controls {
                         color: var(--text-color) !important;
                     }
                 }
-                .ck-reset_all {
-                    position: absolute !important;
-                    bottom: -41px !important;
-                    .ck.ck-toolbar button {
-                        color: var(--text-color);
-                    }
-                }
-                .ck-editor__editable {
-                    margin: 0 2px 2px;
-                    border-radius: 22px;
-                }
             }
         }
     }
@@ -1005,16 +972,6 @@ pagination-controls {
                 color: var(--text-color) !important;
             }
         }
-        .ck-reset_all {
-            position: absolute !important;
-            bottom: -41px !important;
-            .ck.ck-toolbar button {
-                color: var(--text-color) !important;
-            }
-        }
-        .ck.ck-button.ck-on {
-            color: var(--primary-color) !important;
-        }
     }
 }
 
@@ -1036,10 +993,6 @@ pagination-controls {
     .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label--float-above {
         color: #198754 !important;
     }
-}
-
-.ck-editor__editable {
-    color: #000;
 }
 
 .color-input .mat-mdc-form-field-infix {
